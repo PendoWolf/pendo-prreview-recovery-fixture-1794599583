@@ -44,6 +44,7 @@ export default function App() {
         <button data-testid="btn-increment" onClick={() => run("increment", api.increment)}>
           Increment
         </button>
+        {/* Decrement: asks the server to subtract 1 from the shared counter (no lower bound, so it can go negative), then shows the returned state and sends the "decrement" Pendo track event. */}
         <button data-testid="btn-decrement" onClick={() => run("decrement", api.decrement)}>
           Decrement
         </button>
