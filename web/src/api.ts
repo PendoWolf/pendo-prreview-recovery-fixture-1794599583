@@ -7,9 +7,25 @@ export interface AppState {
   lastAction: string;
 }
 
+// Error thrown when the API responds with a non-OK status. Keeps the method,
+// path, and status as fields so callers can report them (e.g. to Pendo).
+export class ApiError extends Error {
+  readonly method: string;
+  readonly path: string;
+  readonly status: number;
+
+  constructor(method: string, path: string, status: number) {
+    super(`${method} ${path} failed: ${status}`);
+    this.name = "ApiError";
+    this.method = method;
+    this.path = path;
+    this.status = status;
+  }
+}
+
 async function call(path: string, method: "GET" | "POST"): Promise<AppState> {
   const res = await fetch(`${BASE}${path}`, { method });
-  if (!res.ok) throw new Error(`${method} ${path} failed: ${res.status}`);
+  if (!res.ok) throw new ApiError(method, path, res.status);
   return res.json() as Promise<AppState>;
 }
 
